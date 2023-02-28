@@ -58,10 +58,10 @@ jobs:
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          docker build . --file Dockerfile --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:$IMAGE_VERSION --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
+          docker build . --file Dockerfile --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:${IMAGE_VERSION} --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
 
       - name: Push Docker image to registry
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          docker push misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:$IMAGE_VERSION --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
+          docker push misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:${IMAGE_VERSION} --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
