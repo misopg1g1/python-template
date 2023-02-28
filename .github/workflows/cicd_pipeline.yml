@@ -7,35 +7,35 @@ on:
       - staging
 
 jobs:
-#  test:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v2
-#
-#      - name: Set up Python 3.10
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: "3.10"
-#
-#      - name: Update pip
-#        run: |
-#          python -m pip install --upgrade pip
-#      - name: Verificar archivo requirements.txt
-#        run: |
-#          if [ ! -f requirements.txt ]; then
-#            echo "requirements.txt no encontrado. No se ejecutará la acción."
-#            exit 0
-#          fi
-#      - name: Install dependencies
-#        run: |
-#          python -m pip install -r requirements.txt
-#
-#      - name: Run tests
-#        run: |
-#          pytest
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Update pip
+        run: |
+          python -m pip install --upgrade pip
+      - name: Verificar archivo requirements.txt
+        run: |
+          if [ ! -f requirements.txt ]; then
+            echo "requirements.txt no encontrado. No se ejecutará la acción."
+            exit 0
+          fi
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest
   build:
-#    needs: test
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Verificar archivo Dockerfile
@@ -49,13 +49,21 @@ jobs:
           docker login --username ${{ secrets.REGISTRY_USERNAME }} --password ${{secrets.REGISTRY_PASSWORD}} ${{ secrets.REGISTRY_HOST }}
 
 
+
       - name: Build Docker image
+        if: success()
         run: |
-          export MOMENT=${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/$(basename $GITHUB_REPOSITORY)_$(basename $GITHUB_REF)
-          echo $MOMENT
-          unset MOMENT
-          docker build --file Dockerfile -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/$(basename $GITHUB_REPOSITORY)_$(basename $GITHUB_REF) .
+          repo_name=$(basename $GITHUB_REPOSITORY)
+          branch_name=$(basename $GITHUB_REF)
+          registry_host = ${{ secrets.REGISTRY_HOST }}
+          registry_space = ${{ secrets.REGISTRY_SPACE }}
+          docker build --file Dockerfile -t ${registry_host}/${registry_space}/${repo_name}_${branch_name} .
 
       - name: Push Docker image to registry
+        if: success()
         run: |
-          docker push ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/$(basename $GITHUB_REPOSITORY)_$(basename $GITHUB_REF):latest
+          repo_name=$(basename $GITHUB_REPOSITORY)
+          branch_name=$(basename $GITHUB_REF)
+          registry_host = ${{ secrets.REGISTRY_HOST }}
+          registry_space = ${{ secrets.REGISTRY_SPACE }}
+          docker push ${registry_host}/${registry_space}/${repo_name}_${branch_name}
