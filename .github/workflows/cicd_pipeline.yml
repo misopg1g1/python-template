@@ -10,37 +10,38 @@ env:
   REGISTRY_HOST: ${{secrets.REGISTRY_HOST}}
   REGISTRY_USERNAME: ${{secrets.REGISTRY_USERNAME}}
   REGISTRY_PASSWORD: ${{secrets.REGISTRY_PASSWORD}}
+  IMAGE_VERSION: $(date +%s)
 
 jobs:
-#  test:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v2
-#
-#      - name: Set up Python 3.10
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: "3.10"
-#
-#      - name: Update pip
-#        run: |
-#          python -m pip install --upgrade pip
-#      - name: Verificar archivo requirements.txt
-#        run: |
-#          if [ ! -f requirements.txt ]; then
-#            echo "requirements.txt no encontrado. No se ejecutará la acción."
-#            exit 0
-#          fi
-#      - name: Install dependencies
-#        run: |
-#          python -m pip install -r requirements.txt
-#
-#      - name: Run tests
-#        run: |
-#          pytest
+  #  test:
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - name: Checkout code
+  #        uses: actions/checkout@v2
+  #
+  #      - name: Set up Python 3.10
+  #        uses: actions/setup-python@v2
+  #        with:
+  #          python-version: "3.10"
+  #
+  #      - name: Update pip
+  #        run: |
+  #          python -m pip install --upgrade pip
+  #      - name: Verificar archivo requirements.txt
+  #        run: |
+  #          if [ ! -f requirements.txt ]; then
+  #            echo "requirements.txt no encontrado. No se ejecutará la acción."
+  #            exit 0
+  #          fi
+  #      - name: Install dependencies
+  #        run: |
+  #          python -m pip install -r requirements.txt
+  #
+  #      - name: Run tests
+  #        run: |
+  #          pytest
   build:
-#    needs: test
+    #    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Verificar archivo Dockerfile
@@ -53,20 +54,15 @@ jobs:
         run: |
           docker login --username $REGISTRY_USERNAME --password $REGISTRY_PASSWORD $REGISTRY_HOST
 
-
-
       - name: Build and tag Docker image
-        if: success()
 
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          docker build -t ${repo_name}_${branch_name} --file Dockerfile
-          docker tag ${repo_name}_${branch_name}:latest misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}
+          docker build . --file Dockerfile --tag ${{secrets.REGISTRY_HOST}}/images/${repo_name}_${branch_name}:$IMAGE_VERSION --tag ${{secrets.REGISTRY_HOST}}/images/${repo_name}_${branch_name}:latest
 
       - name: Push Docker image to registry
-        if: success()
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          docker push misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}
+          docker push ${{secrets.REGISTRY_HOST}}/images/${repo_name}_${branch_name}:$IMAGE_VERSION --tag ${{secrets.REGISTRY_HOST}}/images/${repo_name}_${branch_name}:latest
