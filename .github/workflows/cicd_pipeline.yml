@@ -62,4 +62,5 @@ jobs:
           branch_name=$(basename $GITHUB_REF)
           image_version=$(date +%s)
           docker build . --file Dockerfile --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:${image_version} --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
-          docker push misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:${image_version} --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
+          docker push misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:${image_version} 
+          docker push misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
