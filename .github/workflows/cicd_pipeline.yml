@@ -86,6 +86,7 @@ jobs:
           export REPO_NAME=$(basename $GITHUB_REPOSITORY)
           export BRANCH_NAME=$(basename $GITHUB_REF)
           export REGISTRY_SPACE=${{ secrets.REGISTRY_SPACE }}
+          export REGISTRY_HOST=${{ secrets.REGISTRY_HOST }}
       - name: Aplicar deployment.yaml
         run: |
           envsubst < deployment.yaml | kubectl apply -f -
