@@ -78,8 +78,9 @@ jobs:
           fi
       - name: Crear config file
         run: |
-          echo ${{ secrets.KUBECONFIG_BASE64 }} | base64 --decode > $HOME/.kube/config
-          export KUBECONFIG=$HOME/.kube/config
+          mkdir ${HOME}/.kube
+          echo ${{ secrets.KUBECONFIG_BASE64 }} | base64 --decode > ${HOME}/.kube/config
+          export KUBECONFIG=${HOME}/.kube/config
       - name: Establecer variables del deployment
         run: |
           export REPO_NAME=$(basename $GITHUB_REPOSITORY)
