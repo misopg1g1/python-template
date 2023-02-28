@@ -89,7 +89,7 @@ jobs:
           export REGISTRY_HOST=${{ secrets.REGISTRY_HOST }}
       - name: Aplicar deployment.yaml
         run: |
-          envsubst < deployment.yaml | echo -
+          envsubst < deployment.yaml > cat -
           envsubst < deployment.yaml | kubectl apply -f -
       - name: Eliminar config file
         run: |
