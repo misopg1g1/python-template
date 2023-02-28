@@ -89,6 +89,7 @@ jobs:
           REGISTRY_SPACE: ${{ secrets.REGISTRY_SPACE }}
           REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
         with:
+          github: ${{ toJson(github) }}
           input: deployment.yaml
           output: new_deployment.yaml
       - name: desplegar deployment
