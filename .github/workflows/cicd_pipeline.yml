@@ -52,7 +52,7 @@ jobs:
       - name: Build Docker image
         run: |
           export MOMENT=${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/$(basename $GITHUB_REPOSITORY)_$(basename $GITHUB_REF)
-          echo MOMENT
+          echo $MOMENT
           unset MOMENT
           docker build --file Dockerfile -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/$(basename $GITHUB_REPOSITORY)_$(basename $GITHUB_REF) .
 
