@@ -34,3 +34,34 @@ jobs:
       - name: Run tests
         run: |
           pytest
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar archivo Dockerfile
+        run: |
+          if [ ! -f Dockerfile ]; then
+            echo "Dockerfile no encontrado. No se ejecutará la acción."
+            exit 0
+          fi
+      - name: Log in to registry
+        run: |
+          docker login --username ${{ secrets.REGISTRY_USERNAME }} --password ${{secrets.REGISTRY_PASSWORD}} ${{ secrets.REGISTRY_HOSTt }}
+
+      - name: Get version number
+        id: get_version
+        run: echo "::set-output name=version::$(git describe --tags --abbrev=0 | awk -F. '{ printf "%d.%d.%d", $1,$2,$3+1 }')"
+
+      - name: Build Docker image
+        if: success()
+        run: |
+          repo_name=$(basename $GITHUB_REPOSITORY)
+          branch_name=$(basename $GITHUB_REF)
+          docker build --file Dockerfile -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/${repo_name}-${branch_name}:${{ steps.get_version.outputs.version }} -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/${repo_name}-${branch_name}:latest .
+
+      - name: Push Docker image to registry
+        if: success()
+        run: |
+          repo_name=$(basename $GITHUB_REPOSITORY)
+          branch_name=$(basename $GITHUB_REF)
+          docker push ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/${repo_name}-${branch_name}:${{ steps.get_version.outputs.version }}
+          docker push ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/${repo_name}-${branch_name}:latest
