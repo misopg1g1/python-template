@@ -6,6 +6,12 @@ on:
       - production
       - staging
 
+env:
+  REGISTRY_HOST: ${{secrets.REGISTRY_HOST}}
+  REGISTRY_SPACE: ${{secrets.REGISTRY_SPACE}}
+  REGISTRY_USERNAME: ${{secrets.REGISTRY_USERNAME}}
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+
 jobs:
 #  test:
 #    runs-on: ubuntu-latest
@@ -46,7 +52,7 @@ jobs:
           fi
       - name: Log in to registry
         run: |
-          docker login --username ${{ secrets.REGISTRY_USERNAME }} --password ${{secrets.REGISTRY_PASSWORD}} ${{ secrets.REGISTRY_HOST }}
+          docker login --username ${{ env.REGISTRY_USERNAME }} --password ${{env.REGISTRY_PASSWORD}} ${{ env.REGISTRY_HOST }}
 
 
 
@@ -55,8 +61,8 @@ jobs:
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          registry_host=${{ secrets.REGISTRY_HOST }}
-          registry_space=${{ secrets.REGISTRY_SPACE }}
+          registry_host=${{ env.REGISTRY_HOST }}
+          registry_space=${{ env.REGISTRY_SPACE }}
           docker build -t ${registry_host}/${registry_space}/${repo_name}_${branch_name} .
 
       - name: Push Docker image to registry
@@ -64,6 +70,6 @@ jobs:
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          registry_host=${{ secrets.REGISTRY_HOST }}
-          registry_space=${{ secrets.REGISTRY_SPACE }}
+          registry_host=${{ env.REGISTRY_HOST }}
+          registry_space=${{ env.REGISTRY_SPACE }}
           docker push ${registry_host}/${registry_space}/${repo_name}_${branch_name}
