@@ -50,16 +50,9 @@ jobs:
 
 
       - name: Build Docker image
-        if: success()
         run: |
-          echo ${{ steps.get_version.outputs.version }}
-          repo_name=$(basename $GITHUB_REPOSITORY)
-          branch_name=$(basename $GITHUB_REF)
-          docker build -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/${repo_name}_${branch_name}:latest .
+          docker build --file Dockerfile -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/$(basename $GITHUB_REPOSITORY)_$(basename $GITHUB_REF) .
 
       - name: Push Docker image to registry
-        if: success()
         run: |
-          repo_name=$(basename $GITHUB_REPOSITORY)
-          branch_name=$(basename $GITHUB_REF)
-          docker push ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/${repo_name}_${branch_name}:latest
+          docker push ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/$(basename $GITHUB_REPOSITORY)_$(basename $GITHUB_REF):latest
