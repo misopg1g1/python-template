@@ -9,7 +9,6 @@ on:
 env:
   REGISTRY_USERNAME: ${{secrets.REGISTRY_USERNAME}}
   REGISTRY_PASSWORD: ${{secrets.REGISTRY_PASSWORD}}
-  IMAGE_VERSION: $(date +%s)
 
 jobs:
   #  test:
@@ -53,15 +52,11 @@ jobs:
         run: |
           docker login --username $REGISTRY_USERNAME --password $REGISTRY_PASSWORD misoregistry.edgarluna.dev
 
-      - name: Build and tag Docker image
+      - name: Build and push Docker image
 
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          docker build . --file Dockerfile --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:${IMAGE_VERSION} --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
-
-      - name: Push Docker image to registry
-        run: |
-          repo_name=$(basename $GITHUB_REPOSITORY)
-          branch_name=$(basename $GITHUB_REF)
-          docker push misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:${IMAGE_VERSION} --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
+          image_version=$(date +%s)
+          docker build . --file Dockerfile --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:${image_version} --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
+          docker push misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:${image_version} --tag misoregistry.edgarluna.dev/images/${repo_name}_${branch_name}:latest
