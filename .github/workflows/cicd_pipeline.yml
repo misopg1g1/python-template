@@ -88,9 +88,18 @@ jobs:
           export REGISTRY_SPACE=${{ secrets.REGISTRY_SPACE }}
           export REGISTRY_HOST=${{ secrets.REGISTRY_HOST }}
       - name: Aplicar deployment.yaml
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+          REPO_NAME: $(basename $GITHUB_REPOSITORY)
+          BRANCH_NAME: $(basename $GITHUB_REF)
+          REGISTRY_SPACE: ${{ secrets.REGISTRY_SPACE }}
+          REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
+        with:
+          input: deployment.yaml
+          output: new_deployment.yaml
         run: |
-          envsubst < deployment.yaml > cat -
-          envsubst < deployment.yaml | kubectl apply -f -
-      - name: Eliminar config file
+          kubectl apply -f new_deployment.yaml
+      - name: Eliminar config file y new_deployment
         run: |
           rm -rf $HOME/.kube/config
+          rm -rf new_deployment.yaml
