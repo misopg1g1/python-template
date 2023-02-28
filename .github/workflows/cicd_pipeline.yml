@@ -45,7 +45,7 @@ jobs:
           fi
       - name: Log in to registry
         run: |
-          docker login --username ${{ secrets.REGISTRY_USERNAME }} --password ${{secrets.REGISTRY_PASSWORD}} ${{ secrets.REGISTRY_HOSTt }}
+          docker login --username ${{ secrets.REGISTRY_USERNAME }} --password ${{secrets.REGISTRY_PASSWORD}} ${{ secrets.REGISTRY_HOST }}
 
       - name: Get version number
         id: get_version
