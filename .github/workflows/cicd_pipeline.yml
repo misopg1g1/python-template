@@ -52,21 +52,22 @@ jobs:
           fi
       - name: Log in to registry
         run: |
-          docker login --username ${{ env.REGISTRY_USERNAME }} --password ${{env.REGISTRY_PASSWORD}} ${{ env.REGISTRY_HOST }}
+          docker login --username $REGISTRY_USERNAME --password $REGISTRY_PASSWORD $REGISTRY_HOST
 
 
 
-      - name: Build Docker image
+      - name: Build and tag Docker image
         if: success()
 
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          docker build -t "$REGISTRY_HOST/$REGISTRY_SPACE/${repo_name}_${branch_name}" .
+          docker build -t ${repo_name}_${branch_name} .
+          docker tag ${repo_name}_${branch_name} $REGISTRY_HOST/$REGISTRY_SPACE/${repo_name}_${branch_name} .
 
       - name: Push Docker image to registry
         if: success()
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          docker push "$REGISTRY_HOST/$REGISTRY_SPACE/${repo_name}_${branch_name}"
+          docker push $REGISTRY_HOST/$REGISTRY_SPACE/${repo_name}_${branch_name}
