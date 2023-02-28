@@ -88,10 +88,10 @@ jobs:
           export REGISTRY_SPACE=${{ secrets.REGISTRY_SPACE }}
           export REGISTRY_HOST=${{ secrets.REGISTRY_HOST }}
       - name: Crear nuevo deployment
-        uses: danielr1996/envsubst-action@1.0.0
+        uses: nowactions/envsubst@v1
         env:
-          REPO_NAME: $(basename $GITHUB_REPOSITORY)
-          BRANCH_NAME: $(basename $GITHUB_REF)
+          REPO_NAME: ${basename $GITHUB_REPOSITORY}
+          BRANCH_NAME: ${basename $GITHUB_REF}
           REGISTRY_SPACE: ${{ secrets.REGISTRY_SPACE }}
           REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
         with:
