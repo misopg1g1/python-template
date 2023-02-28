@@ -35,6 +35,7 @@ jobs:
         run: |
           pytest
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Verificar archivo Dockerfile
@@ -56,7 +57,7 @@ jobs:
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          docker build --file Dockerfile -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/${repo_name}-${branch_name}:${{ steps.get_version.outputs.version }} -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/${repo_name}-${branch_name}:latest .
+          docker build -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/${repo_name}-${branch_name}:${{ steps.get_version.outputs.version }} -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_SPACE }}/${repo_name}-${branch_name}:latest .
 
       - name: Push Docker image to registry
         if: success()
