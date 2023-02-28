@@ -90,10 +90,10 @@ jobs:
       - name: Crear nuevo deployment
         uses: nowactions/envsubst@v1
         env:
-          REPO_NAME: $REPO_NAME
-          BRANCH_NAME: $BRANCH_NAME
-          REGISTRY_SPACE: $REGISTRY_SPACE
-          REGISTRY_HOST: $REGISTRY_HOST
+          REPO_NAME: ${{env.REPO_NAME}}
+          BRANCH_NAME: ${{env.BRANCH_NAME}}
+          REGISTRY_SPACE: ${{env.REGISTRY_SPACE}}
+          REGISTRY_HOST: ${{env.REGISTRY_HOST}}
         with:
           input: deployment.yaml
           output: new_deployment.yaml
