@@ -62,11 +62,11 @@ jobs:
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          docker build -t "%REGISTRY_HOST%/%REGISTRY_SPACE%/${repo_name}_${branch_name}" .
+          docker build -t "$REGISTRY_HOST/$REGISTRY_SPACE/${repo_name}_${branch_name}" .
 
       - name: Push Docker image to registry
         if: success()
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
           branch_name=$(basename $GITHUB_REF)
-          docker push "%REGISTRY_HOST%/%REGISTRY_SPACE%/${repo_name}_${branch_name}"
+          docker push "$REGISTRY_HOST/$REGISTRY_SPACE/${repo_name}_${branch_name}"
