@@ -102,10 +102,12 @@ jobs:
           deployment.yaml > new_deployment.yaml
       - name: desplegar servicio
         run: |
+          BRANCH_NAME=$(basename $GITHUB_REF)
           kubectl apply -f new_deployment.yaml
           kubectl rollout restart deployment ${{env.REPO_NAME}}-app -n ${BRANCH_NAME}
       - name: Eliminar config file y new_deployment
         run: |
+          BRANCH_NAME=$(basename $GITHUB_REF)
           echo "Se desplegaron la aplicación y el servicio en la rama ${BRANCH_NAME} de manera exitosa"
           rm -rf $HOME/.kube/config
           rm -rf new_deployment.yaml
