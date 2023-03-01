@@ -3,15 +3,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: $REPO_NAME-app
-  namespace: $BRANCH_NAME
+  name: ${REPO_NAME}-app
+  namespace: ${BRANCH_NAME}
   labels:
-    app: $REPO_NAME-app
+    app: ${REPO_NAME}-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: $REPO_NAME-app
+      app: ${REPO_NAME}-app
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -20,11 +20,11 @@ spec:
   template:
     metadata:
       labels:
-        app: $REPO_NAME-app
+        app: ${REPO_NAME}-app
     spec:
       containers:
-        - name: $REPO_NAME-app
-          image: $REGISTRY_HOST/$REGISTRY_SPACE/$REPO_NAME-$BRANCH_NAME:latest
+        - name: ${REPO_NAME}-app
+          image: ${REGISTRY_HOST}/${REGISTRY_SPACE}/${REPO_NAME}-${BRANCH_NAME}:latest
           ports:
             - containerPort: 3001
           imagePullPolicy: Always
@@ -54,8 +54,8 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: $REPO_NAME-svc
-  namespace: $BRANCH_NAME
+  name: ${REPO_NAME}-svc
+  namespace: ${BRANCH_NAME}
 spec:
   type: NodePort
   selector:
