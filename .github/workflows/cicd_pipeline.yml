@@ -83,6 +83,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: configurar kubectl
+        uses: actions-hub/kubectl@master
       - name: Verificar archivo deployment.yaml
         run: |
           if [ ! -f deployment.yaml ]; then
@@ -97,14 +99,9 @@ jobs:
           -e "s~\${REGISTRY_SPACE}~$REGISTRY_SPACE~g" \
           -e "s~\${REGISTRY_HOST}~$REGISTRY_HOST~g" \
           deployment.yaml > new_deployment.yaml
-      - name: desplegar servicio
-        uses: actions-hub/kubectl@master
-        with:
-          args: apply -f new_deployment.yaml
+          kubectl apply -f new_deployment.yaml
       - name: reiniciar pods
-        uses: actions-hub/kubectl@master
-        with:
-          args: rollout restart deployment $REPO_NAME ${BRANCH_NAME}
+        run: kubectl rollout restart deployment $REPO_NAME -n ${BRANCH_NAME}
       - name: Eliminar config file y new_deployment
         run: |
           echo "Se desplegaron la aplicación y el servicio en la rama ${BRANCH_NAME} de manera exitosa"
