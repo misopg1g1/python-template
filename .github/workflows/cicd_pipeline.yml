@@ -79,12 +79,11 @@ jobs:
       - name: Establecer variables del deployment
         env:
           REPO_NAME: ${{ github.event.repository.name }}
-          BRANCH_NAME: "${{ basename github.ref }}"
           REGISTRY_SPACE: ${{ secrets.REGISTRY_SPACE }}
           REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
         run: |
           sed -e "s~\${REPO_NAME}~$REPO_NAME~g" \
-          -e "s~\${BRANCH_NAME}~$BRANCH_NAME~g" \
+          -e "s~\${BRANCH_NAME}~$(basename $GITHUB_REF)~g" \
           -e "s~\${REGISTRY_SPACE}~$REGISTRY_SPACE~g" \
           -e "s~\${REGISTRY_HOST}~$REGISTRY_HOST~g" \
           deployment.yaml > new_deployment.yaml
