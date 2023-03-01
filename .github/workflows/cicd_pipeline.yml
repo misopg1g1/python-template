@@ -76,11 +76,6 @@ jobs:
             echo "deployment.yaml no encontrado. No se ejecutará la acción."
             exit 0
           fi
-      - name: Crear config file
-        run: |
-          mkdir ${HOME}/.kube
-          echo ${{ secrets.KUBECONFIG_BASE64 }} | base64 --decode > ${HOME}/.kube/config
-          export KUBECONFIG=${HOME}/.kube/config
       - name: Establecer variables del deployment
         env:
           REPO_NAME: ${{ github.event.repository.name }}
@@ -93,9 +88,12 @@ jobs:
           -e "s~\${REGISTRY_SPACE}~$REGISTRY_SPACE~g" \
           -e "s~\${REGISTRY_HOST}~$REGISTRY_HOST~g" \
           deployment.yaml > new_deployment.yaml
-      - name: desplegar deployment
-        run: |
-          kubectl apply -f new_deployment.yaml
+      - name: desplegar servicio
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.BASE64_KUBECONFIG }}
+        with:
+          args: apply -f new_deployment.yaml
       - name: Eliminar config file y new_deployment
         run: |
           rm -rf $HOME/.kube/config
