@@ -81,20 +81,21 @@ jobs:
           mkdir ${HOME}/.kube
           echo ${{ secrets.KUBECONFIG_BASE64 }} | base64 --decode > ${HOME}/.kube/config
           export KUBECONFIG=${HOME}/.kube/config
-      - name: Crear nuevo deployment
-        uses: nowactions/envsubst@v1
-        env:
-          REPO_NAME: "${GITHUB_REPOSITORY##*/}"
-          BRANCH_NAME: "${GITHUB_REF##*/}"
-          REGISTRY_SPACE: ${{ secrets.REGISTRY_SPACE }}
-          REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
-        with:
-          input: deployment.yaml
-          output: new_deployment.yaml
+      - name: Establecer variables del deployment
+        run: |
+          export REPO_NAME=$(basename $GITHUB_REPOSITORY)
+          export BRANCH_NAME=$(basename $GITHUB_REF)
+          export REGISTRY_SPACE=${{ secrets.REGISTRY_SPACE }}
+          export REGISTRY_HOST=${{ secrets.REGISTRY_HOST }}
+          sed -e "s/\${REPO_NAME}/$REPO_NAME/g" \
+          -e "s/\${BRANCH_NAME}/$BRANCH_NAME/g" \
+          -e "s/\${REGISTRY_SPACE}/$REGISTRY_SPACE/g" \
+          -e "s/\${REGISTRY_HOST}/$REGISTRY_HOST/g" \
+          deployment.yaml > new_deployment.yaml
       - name: desplegar deployment
         run: |
           cat new_deployment.yaml
-      #          kubectl apply -f new_deployment.yaml
+#          kubectl apply -f new_deployment.yaml
       - name: Eliminar config file y new_deployment
         run: |
           rm -rf $HOME/.kube/config
