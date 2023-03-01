@@ -82,6 +82,11 @@ jobs:
           echo ${{ secrets.KUBECONFIG_BASE64 }} | base64 --decode > ${HOME}/.kube/config
           export KUBECONFIG=${HOME}/.kube/config
       - name: Establecer variables del deployment
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+          BRANCH_NAME: ${{ github.ref }}
+          REGISTRY_SPACE: ${{ secrets.REGISTRY_SPACE }}
+          REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
         run: |
           export REPO_NAME=$(basename $GITHUB_REPOSITORY)
           export BRANCH_NAME=$(basename $GITHUB_REF)
