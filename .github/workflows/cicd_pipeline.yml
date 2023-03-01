@@ -78,7 +78,7 @@ jobs:
           fi
       - name: Obtener nombre de la rama
         run: |
-          BRANCH_NAME="$(basename $GITHUB_REF)"
+          export BRANCH_NAME=$(basename $GITHUB_REF)
         env:
           BRANCH_NAME: ${{ env.BRANCH_NAME }}
       - name: Establecer variables del deployment
