@@ -85,7 +85,7 @@ jobs:
       - name: Configurar kubectl
         uses: tale/kubectl-action@v1
         with:
-          base64-kube-config: ${{ secrets.KUBE_CONFIG }
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
       - name: Verificar archivo deployment.yaml
         run: |
           if [ ! -f deployment.yaml ]; then
