@@ -57,9 +57,9 @@ metadata:
   name: ${REPO_NAME}-svc
   namespace: ${BRANCH_NAME}
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
-    app: agenda-app
+    app: ${REPO_NAME}-app
   ports:
     - protocol: TCP
       port: 80
