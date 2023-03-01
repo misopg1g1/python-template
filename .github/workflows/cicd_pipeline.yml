@@ -95,8 +95,7 @@ jobs:
           deployment.yaml > new_deployment.yaml
       - name: desplegar deployment
         run: |
-          cat new_deployment.yaml
-#          kubectl apply -f new_deployment.yaml
+          kubectl apply -f new_deployment.yaml
       - name: Eliminar config file y new_deployment
         run: |
           rm -rf $HOME/.kube/config
