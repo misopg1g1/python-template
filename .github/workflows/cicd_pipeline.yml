@@ -94,7 +94,7 @@ jobs:
           -e "s~\${BRANCH_NAME}~$(basename $GITHUB_REF)~g" \
           -e "s~\${REGISTRY_SPACE}~$REGISTRY_SPACE~g" \
           -e "s~\${REGISTRY_HOST}~$REGISTRY_HOST~g" \
-          cicd_templates/deployment.yaml > cicd_templates/new_deployment.yaml
+          deployment.yaml > new_deployment.yaml
       - name: desplegar servicio
         uses: actions-hub/kubectl@master
         env:
