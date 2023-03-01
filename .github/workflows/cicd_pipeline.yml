@@ -84,12 +84,11 @@ jobs:
       - name: Crear nuevo deployment
         uses: nowactions/envsubst@v1
         env:
-          REPO_NAME: "$(basename $GITHUB_REPOSITORY)"
-          BRANCH_NAME: "$(basename $GITHUB_REF)"
+          REPO_NAME: "$(basename ${GITHUB_REPOSITORY})"
+          BRANCH_NAME: "$(basename ${GITHUB_REF})"
           REGISTRY_SPACE: ${{ secrets.REGISTRY_SPACE }}
           REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
         with:
-          github: ${{ toJson(github) }}
           input: deployment.yaml
           output: new_deployment.yaml
       - name: desplegar deployment
