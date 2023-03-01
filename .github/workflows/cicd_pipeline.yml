@@ -68,7 +68,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout codigo
         uses: actions/checkout@v3
       - name: Verificar archivo deployment.yaml
         run: |
