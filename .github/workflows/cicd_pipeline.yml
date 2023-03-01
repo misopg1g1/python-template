@@ -68,7 +68,7 @@ jobs:
           -e "s~\${IMAGE_VERSION}~${IMAGE_VERSION}~g" \
           -e "s~\${REGISTRY_HOST}~$REGISTRY_HOST~g" \
           docker_image_bash.sh > new_docker_image_bash.sh
-          cat new_docker_image_bash.sh
+          bash new_docker_image_bash.sh
           echo "La imagen $REGISTRY_HOST/$REGISTRY_SPACE/${repo_name}-${BRANCH_NAME}:${IMAGE_VERSION} se construyo y se subió exitosamente"
           echo "La imagen $REGISTRY_HOST/$REGISTRY_SPACE/${repo_name}-${BRANCH_NAME}:latest se construyo y se subió exitosamente"
 #  deploy:
