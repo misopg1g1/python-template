@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: ${REPO_NAME}-app
-          image: ${REGISTRY_HOST}/${REGISTRY_SPACE}/${REPO_NAME}_${BRANCH_NAME}:latest
+          image: ${REGISTRY_HOST}/${REGISTRY_SPACE}/${REPO_NAME}-${BRANCH_NAME}:latest
           ports:
             - containerPort: 3001
           imagePullPolicy: Always
