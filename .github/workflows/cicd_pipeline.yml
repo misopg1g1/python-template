@@ -76,10 +76,15 @@ jobs:
             echo "deployment.yaml no encontrado. No se ejecutará la acción."
             exit 0
           fi
+      - name: Obtener nombre de la rama
+        run: |
+          BRANCH_NAME="$(basename $GITHUB_REF)"
+        env:
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
       - name: Establecer variables del deployment
         env:
-          REPO_NAME: $(basename ${{ github.repository }}
-          BRANCH_NAME: ${{ github.ref }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
           REGISTRY_SPACE: ${{ secrets.REGISTRY_SPACE }}
           REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
         run: |
