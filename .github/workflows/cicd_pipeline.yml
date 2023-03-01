@@ -79,7 +79,7 @@ jobs:
       - name: Establecer variables del deployment
         env:
           REPO_NAME: ${{ github.event.repository.name }}
-          BRANCH_NAME: ${{ github.ref.split('/')[2] }}
+          BRANCH_NAME: "${{ github.ref.split('/')[2] }}"
           REGISTRY_SPACE: ${{ secrets.REGISTRY_SPACE }}
           REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
         run: |
