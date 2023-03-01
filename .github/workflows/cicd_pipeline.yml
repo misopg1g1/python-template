@@ -60,18 +60,17 @@ jobs:
           REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
 
         run: |
-          repo_name=$(basename $GITHUB_REPOSITORY)
-          branch_name=$(basename $GITHUB_REF)
-          image_version=$(date +%s)
+          BRANCH_NAME=$(basename $GITHUB_REF)
+          IMAGE_VERSION=$(date +%s)
           sed -e "s~\${REPO_NAME}~$REPO_NAME~g" \
-          -e "s~\${BRANCH_NAME}~$(basename $GITHUB_REF)~g" \
+          -e "s~\${BRANCH_NAME}~${BRANCH_NAME}~g" \
           -e "s~\${REGISTRY_SPACE}~$REGISTRY_SPACE~g" \
-          -e "s~\${IMAGE_VERSION}~${image_version}~g" \
+          -e "s~\${IMAGE_VERSION}~${IMAGE_VERSION}~g" \
           -e "s~\${REGISTRY_HOST}~$REGISTRY_HOST~g" \
           docker_image_bash.sh > new_docker_image_bash.sh
           cat new_docker_image_bash.sh
-          echo "La imagen $REGISTRY_HOST/REGISTRY_SPACE/${repo_name}-${branch_name}:${image_version} se construyo y se subió exitosamente"
-          echo "La imagen $REGISTRY_HOST/REGISTRY_SPACE/${repo_name}-${branch_name}:latest se construyo y se subió exitosamente"
+          echo "La imagen $REGISTRY_HOST/REGISTRY_SPACE/${repo_name}-${BRANCH_NAME}:${IMAGE_VERSION} se construyo y se subió exitosamente"
+          echo "La imagen $REGISTRY_HOST/REGISTRY_SPACE/${repo_name}-${BRANCH_NAME}:latest se construyo y se subió exitosamente"
 #  deploy:
 #    needs: build
 #    runs-on: ubuntu-latest
